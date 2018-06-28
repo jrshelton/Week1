@@ -11,7 +11,6 @@ public class SqlHelper {
 
     public static Connection getConnection() throws SQLException {
 
-        //Class.forName("com.mysql.jdbc.Driver");
 
         Connection conn = null;
 

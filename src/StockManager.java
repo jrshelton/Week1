@@ -166,26 +166,28 @@ public class StockManager {
         }
     }
 
-    public static void addMinProcedure(){
-        String sql = "DELIMITER // " +
-                "CREATE PROCEDURE FindMinValue(IN name TEXT)" +
-                "BEGIN " +
-                "SELECT min(price) FROM stock.stocks" +
-                "WHERE symbol  = name; " +
-                "END // " +
-                "DELIMITER";
+    public static void closingPrice(String name, Date day){
+        String sql = "{CALL ClosingPrice(?,?)}";
 
+        ResultSet keys;
         try (
                 Connection conn = SqlHelper.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql);
+                CallableStatement stmt = conn.prepareCall(sql);
         ) {
 
-            int affected = stmt.executeUpdate();
+            stmt.setString(1, name);
+            stmt.setDate(2, new java.sql.Date(day.getTime()));
 
-            } catch (SQLException e1) {
-            e1.printStackTrace();
+            keys = stmt.executeQuery();
+            if(keys.next()) {
+                System.out.println(keys.getString(1));
+            }
+
+        } catch (SQLException e) {
+            System.err.println(e);
         }
-
     }
+
+
     }
 
